@@ -1,0 +1,81 @@
+داخل MySQL Workbench :-
+
+USE movie_rental_olap;
+
+2) اعرض كل الجداول
+
+SHOW TABLES;
+
+
+3) اعرض البيانات
+
+customers
+
+SELECT * FROM dim_customer
+LIMIT 10;
+
+
+films
+
+SELECT * FROM dim_film
+LIMIT 10;
+
+
+rentals
+
+SELECT * FROM fact_rental
+LIMIT 10;
+
+
+payments
+
+SELECT * FROM fact_payment
+LIMIT 10;
+
+
+inventory snapshot
+
+SELECT * FROM fact_inventory_snapshot
+LIMIT 10;
+
+4) اعرض عدد الصفوف
+
+SELECT COUNT(*) FROM dim_customer;
+SELECT COUNT(*) FROM dim_film;
+SELECT COUNT(*) FROM fact_rental;
+SELECT COUNT(*) FROM fact_payment;
+
+إذا رجع أرقام أكبر من 0 معناته كل شي تمام.
+
+5) داخل VS Code / Jupyter
+
+query = "SELECT * FROM fact_rental LIMIT 10"
+
+data = pd.read_sql(query, target_engine)
+
+print(data)
+
+-------------------------------------------------------------------
+
+in MySQL:-
+
+6) عرض التحليلات
+
+أكثر الأفلام تأجيرًا
+
+SELECT
+    f.title,
+    SUM(r.rental_count) AS total_rentals
+FROM fact_rental r
+JOIN dim_film f
+ON r.film_key = f.film_key
+GROUP BY f.title
+ORDER BY total_rentals DESC
+LIMIT 10;
+
+
+أعلى الإيرادات
+
+SELECT
+    SUM(payment_amount) AS total_revenue
+FROM fact_payment;
